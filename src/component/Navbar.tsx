@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';  // Import Link from react-router-dom
-import img from "./cooking.png"
+import img from "./cooking.png";
+
+// Define the Navbar component
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  // State to manage the mobile menu toggle (boolean)
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <nav className="bg-slate-500 p-2">
       <div className="container mx-auto flex justify-between items-center">
         {/* Brand Name */}
         <Link to="/" className="text-white text-lg font-semibold">
-         <img src={img} className=' max-h-9 max-w-12 animate-bounce bg-transparent' />
+          <img src={img} className="max-h-9 max-w-12 animate-bounce bg-transparent" />
         </Link>
 
         {/* Hamburger Menu for mobile */}
@@ -77,10 +80,6 @@ const Navbar = () => {
           >
             Ingredients
           </Link>
-
-          
-
-          
         </div>
       </div>
     </nav>

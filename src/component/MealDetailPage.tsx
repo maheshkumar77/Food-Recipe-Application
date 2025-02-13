@@ -7,29 +7,42 @@ import { IoFastFood } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { LuLoader } from "react-icons/lu";
 
+// Define types for the fetched meal and related meals
+interface Meal {
+  idMeal: string;
+  strMeal: string;
+  strMealThumb: string;
+  strInstructions: string;
+  strCategory: string;
+  [key: string]: string | null; // Allow dynamic keys for ingredients
+}
+
+interface RelatedMeal {
+  idMeal: string;
+  strMeal: string;
+  strMealThumb: string;
+}
+
 export default function MealDetailPage() {
-  const { data } = useParams(); // Extract meal ID from URL parameters
-  const [meal, setMeal] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [category, setCategory] = useState(""); // Category is a string now
-  const [relatedMeals, setRelatedMeals] = useState([]); // Store related meals
+  const { data } = useParams<{ data: string }>(); // Extract meal ID from URL parameters
+  const [meal, setMeal] = useState<Meal | null>(null); // State for meal, initially null
+  const [loading, setLoading] = useState<boolean>(true); // State for loading
+  const [error, setError] = useState<string | null>(null); // State for error, initially null
+ const [category, setCategory] = useState<string>(""); // Category is a string
+  const [relatedMeals, setRelatedMeals] = useState<RelatedMeal[]>([]); // Store related meals
 
   // Fetch data from API when meal data changes
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fix the URL with https
         const response = await axios.get(
           `https://www.themealdb.com/api/json/v1/1/search.php?s=${data}`
         );
 
-        // If the meal has a category, fetch related meals
         if (response.data.meals && response.data.meals.length > 0) {
           const mealData = response.data.meals[0];
           setMeal(mealData); // Set the fetched meal details
 
-          // Set the category from the fetched meal
           const mealCategory = mealData.strCategory;
           setCategory(mealCategory);
 
@@ -73,18 +86,18 @@ export default function MealDetailPage() {
       <div className="flex justify-center flex-col items-center">
         <div className="h-[70vh] w-[100%]">
           <img
-            src={meal.strMealThumb}
-            alt={meal.strMeal}
+            src={meal?.strMealThumb || ""}
+            alt={meal?.strMeal || "Meal"}
             className="h-screen w-full object-cover mt-7 mb-7"
           />
         </div>
         <div className="w-full flex justify-center flex-col text-center text-lg p-4 sm:mt-[-50px] mt-[-95%] rounded bg-slate-800 opacity-70">
           <div className="flex justify-center items-center">
             <IoFastFood className="text-white text-4xl" />
-            <h1 className="text-white lg:text-3xl md:text-lg">{meal.strMeal}</h1>
+            <h1 className="text-white lg:text-3xl md:text-lg">{meal?.strMeal}</h1>
           </div>
           <p className="text-white mt-4 space-x-0 mb-3 first-line:tracking-widest lg:first-letter:text-7xl first-letter:text-3xl first-letter:font-bold lg:text-lg text-xs sm:h[100px] sm:overflow-x-auto text-wrap">
-            {meal.strInstructions}
+            {meal?.strInstructions}
           </p>
           <div className="text-white mt-4">
             <div className="flex lg:justify-start lg:flex-row flex-col">
@@ -95,10 +108,10 @@ export default function MealDetailPage() {
                     <h2 className="text-white text-2xl underline">Ingredients</h2>
                   </div>
                   <div className="flex flex-col gap-2 float-start">
-                    {Object.keys(meal)
+                    {Object.keys(meal || {})
                       .filter((key) => key.startsWith("strIngredient"))
                       .map((ingredientKey) => {
-                        if (meal[ingredientKey]) {
+                        if (meal && meal[ingredientKey]) {
                           return (
                             <div className="flex gap-7 flex-row w-auto" key={ingredientKey}>
                               <FaMapPin className="text-lg text-green-500 animate-pulse" />

@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { FaYoutube, FaInstagram, FaFacebook, FaTwitter } from 'react-icons/fa';
 
-const Footer = () => {
-  const [rating, setRating] = useState(0);
-  const [feedback, setFeedback] = useState('');
-  const [message, setMessage] = useState('');
+const Footer: React.FC = () => {
+  const [rating, setRating] = useState<number>(0); // Rating as number
+  const [feedback, setFeedback] = useState<string>(''); // Feedback as string
+  const [message, setMessage] = useState<string>(''); // Message as string
 
-  const handleSubmit = (e) => {
+  // Handle form submission
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (rating === 0 || !feedback) {
       setMessage('Please fill in all fields');
       return;
     }
-    
+
     // Reset feedback and rating after submission
     setMessage('Thank you for your feedback!');
     setTimeout(() => {
@@ -49,9 +50,9 @@ const Footer = () => {
               <label className="block text-sm font-medium mb-2">Your Feedback</label>
               <textarea
                 className="w-full p-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                rows="4"
+                rows={4}
                 value={feedback}
-                onChange={(e) => setFeedback(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setFeedback(e.target.value)}
               />
             </div>
 

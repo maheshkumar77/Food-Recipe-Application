@@ -5,12 +5,16 @@ import { LuLoader } from "react-icons/lu";
 import { GiWorld } from "react-icons/gi";
 import Footer from "../component/Footer";
 
+// Define a type for the area object
+interface Area {
+  strCategory: string;
+}
 
 export default function CuisineList() {
-  const [areas, setAreas] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(""); // Track the selected category
+  const [areas, setAreas] = useState<Area[]>([]); // Type areas state
+  const [loading, setLoading] = useState<boolean>(true); // Type loading state
+  const [error, setError] = useState<string | null>(null); // Type error state
+  const [selectedCategory, setSelectedCategory] = useState<string>(""); // Type selectedCategory state
 
   useEffect(() => {
     const fetchAreas = async () => {
@@ -28,14 +32,13 @@ export default function CuisineList() {
   }, []);
 
   // Handling category click to set selectedCategory
-  const handleCategoryClick = (category) => {
+  const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
   };
 
   if (loading) {
-   return <div className="text-center text-8xl w-full flex justify-center items-center"><LuLoader className=' animate-spin' /></div>;
-      }
-  
+    return <div className="text-center text-8xl w-full flex justify-center items-center"><LuLoader className="animate-spin" /></div>;
+  }
 
   if (error) {
     return <h1 className="text-center text-xl text-red-600">{error}</h1>;
@@ -43,8 +46,12 @@ export default function CuisineList() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-xl lg:text-4xl font-bold text-center mb-6 text-white underline flex justify-center"> <GiWorld className=" animate-spin mr-4"/>CUISINES FROM AROUND THE WORLD <GiWorld className=" animate-spin ml-4"/> </h1>
-      
+      <h1 className="text-xl lg:text-4xl font-bold text-center mb-6 text-white underline flex justify-center">
+        <GiWorld className="animate-spin mr-4" />
+        CUISINES FROM AROUND THE WORLD
+        <GiWorld className="animate-spin ml-4" />
+      </h1>
+
       {/* Grid layout for displaying areas */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {areas.map((area, index) => (
@@ -60,7 +67,7 @@ export default function CuisineList() {
         ))}
       </div>
       <div>
-        <Footer/>
+        <Footer />
       </div>
     </div>
   );

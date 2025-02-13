@@ -7,18 +7,27 @@ import { IoFastFood } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { LuLoader } from "react-icons/lu";
 import { FaYoutube } from "react-icons/fa";
-
 import { FiExternalLink } from "react-icons/fi";
 import Footer from "./Footer";
 
+// Define types for the meal and related meals
+interface Meal {
+  idMeal: string;
+  strMeal: string;
+  strMealThumb: string;
+  strCategory: string;
+  strInstructions: string;
+  strYoutube: string;
+  [key: string]: string | undefined; // For ingredients and measures
+}
 
 const Fooddetail = () => {
-  const { idMeal } = useParams(); // Extract meal ID from URL parameters
-  const [meal, setMeal] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [category, setCategory] = useState(""); // Category is a string now
-  const [relatedMeals, setRelatedMeals] = useState([]); // Store related meals
+  const { idMeal } = useParams<{ idMeal: string }>(); // Extract meal ID from URL parameters
+  const [meal, setMeal] = useState<Meal | null>(null); // State for meal details
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
+  const [category, setCategory] = useState<string>(""); // Category as string
+  const [relatedMeals, setRelatedMeals] = useState<Meal[]>([]); // Related meals state
 
   // Fetch meal details based on the idMeal from the URL
   useEffect(() => {
@@ -79,19 +88,23 @@ const Fooddetail = () => {
       <div className="flex justify-center flex-col items-center">
         <div className="h-[70vh] w-[100%]">
           <img
-            src={meal.strMealThumb}
-            alt={meal.strMeal}
+            src={meal?.strMealThumb}
+            alt={meal?.strMeal}
             className="h-screen w-full object-cover mt-7 mb-7"
           />
         </div>
         <div className="w-full flex justify-center flex-col text-center text-lg p-4 sm:mt-[-50px] mt-[-95%] rounded bg-slate-800 opacity-70">
           <div className="flex justify-center items-center">
             <IoFastFood className="text-white text-4xl" />
-            <h1 className="text-white lg:text-3xl md:text-lg">{meal.strMeal}</h1>
-            <div className=" flex justify-center items-center "><a href={meal.strYoutube}> <FaYoutube className=" animate-pulse text-white lg:text-4xl md:text-lg"/></a> </div>
+            <h1 className="text-white lg:text-3xl md:text-lg">{meal?.strMeal}</h1>
+            <div className=" flex justify-center items-center ">
+              <a href={meal?.strYoutube}>
+                <FaYoutube className=" animate-pulse text-white lg:text-4xl md:text-lg"/>
+              </a>
+            </div>
           </div>
           <p className="text-white mt-4 space-x-0 mb-3 first-line:tracking-widest lg:first-letter:text-7xl first-letter:text-3xl first-letter:font-bold lg:text-lg text-xs sm:h[100px] sm:overflow-x-auto text-wrap">
-            {meal.strInstructions}
+            {meal?.strInstructions}
           </p>
           <div className="text-white mt-4">
             <div className="flex lg:justify-start lg:flex-row flex-col">
@@ -106,12 +119,11 @@ const Fooddetail = () => {
                     {Array.from({ length: 20 }).map((_, index) => {
                       const ingredientKey = `strIngredient${index + 1}`;
                       const measureKey = `strMeasure${index + 1}`;
-                      if (meal[ingredientKey] && meal[measureKey]) {
+                      if (meal && meal[ingredientKey] && meal[measureKey]) {
                         return (
                           <div className="flex gap-1 flex-row w-full" key={ingredientKey}>
                             <FaMapPin className="text-lg text-green-500 animate-pulse" />
                             <p className=" flex w-full ">{meal[ingredientKey]}: {meal[measureKey]} </p>
-                            
                           </div>
                         );
                       }

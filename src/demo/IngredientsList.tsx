@@ -5,12 +5,16 @@ import { LuLoader } from "react-icons/lu";
 import { GiStrawberry } from "react-icons/gi";
 import { BsCupStraw } from "react-icons/bs";
 
+// Define a type for the ingredient object
+interface Ingredient {
+  idIngredient: string;
+  strIngredient: string;
+}
 
 export default function IngredientsList() {
-  const [ingredients, setIngredients] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]); // Type ingredients state
+  const [loading, setLoading] = useState<boolean>(true); // Type loading state
+  const [error, setError] = useState<string | null>(null); // Type error state
 
   // Fetch ingredients list on component mount
   useEffect(() => {
@@ -19,7 +23,7 @@ export default function IngredientsList() {
         const response = await axios.get(
           "https://www.themealdb.com/api/json/v1/1/list.php?i=list"
         );
-        setIngredients(response.data.meals);
+        setIngredients(response.data.meals); // Assuming meals is the correct key
         setLoading(false);
       } catch (err) {
         setError("Error loading ingredients");
@@ -32,9 +36,11 @@ export default function IngredientsList() {
 
   // Render loading state
   if (loading) {
-     
-        return <div className="text-center text-8xl w-full flex justify-center items-center"><LuLoader className=' animate-spin' /></div>;
-      
+    return (
+      <div className="text-center text-8xl w-full flex justify-center items-center">
+        <LuLoader className="animate-spin" />
+      </div>
+    );
   }
 
   // Render error state
@@ -44,7 +50,11 @@ export default function IngredientsList() {
 
   return (
     <div className="container h-auto mx-auto p-6">
-      <h1 className="text-xl lg:text-4xl font-bold text-center mb-6 text-white underline flex justify-center"> <GiStrawberry className=" animate-ping mr-4"/> INGREDIENTS LIST  <BsCupStraw className=" animate-ping ml-4"/></h1>
+      <h1 className="text-xl lg:text-4xl font-bold text-center mb-6 text-white underline flex justify-center">
+        <GiStrawberry className="animate-ping mr-4" />
+        INGREDIENTS LIST
+        <BsCupStraw className="animate-ping ml-4" />
+      </h1>
 
       {/* Grid layout for displaying ingredients */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
@@ -55,7 +65,12 @@ export default function IngredientsList() {
           >
             <div className="text-center">
               <h2 className="text-xl font-semibold">{ingredient.strIngredient}</h2>
-              <Link to={`/mealsa/${ingredient.strIngredient}`} className="text-center text-white underline mt-2">See Meals</Link>
+              <Link
+                to={`/mealsa/${ingredient.strIngredient}`}
+                className="text-center text-white underline mt-2"
+              >
+                See Meals
+              </Link>
             </div>
           </div>
         ))}

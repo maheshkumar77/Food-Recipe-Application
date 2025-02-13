@@ -4,20 +4,27 @@ import { Link } from "react-router-dom";
 import { LuLoader } from "react-icons/lu";
 import { FiLink } from "react-icons/fi";
 
-const Indianfood = () => {
-  const [error, setError] = useState(null);  // For handling error
-  const [meals, setMeals] = useState([]);
-  const [loading, setLoading] = useState(true);
+// Type for the meal data
+interface Meal {
+  idMeal: string;
+  strMeal: string;
+  strMealThumb: string;
+}
+
+const Indianfood: React.FC = () => {
+  const [error, setError] = useState<string | null>(null); // For handling error, string or null
+  const [meals, setMeals] = useState<Meal[]>([]); // State for meals, typed as an array of Meal
+  const [loading, setLoading] = useState<boolean>(true); // State for loading, typed as boolean
 
   useEffect(() => {
     const fetch = async () => {
       try {
         const response = await axios.get('https://www.themealdb.com/api/json/v1/1/filter.php?a=Indian');
-        setMeals(response.data.meals);  // Update the state with the fetched meals data
-        setLoading(false);  // Set loading to false when data is fetched
+        setMeals(response.data.meals); // Update the state with the fetched meals data
+        setLoading(false); // Set loading to false when data is fetched
       } catch (err) {
-        setError("Error fetching data");  // Handle any error during the fetch
-        setLoading(false);  // Stop the loading spinner even if there's an error
+        setError("Error fetching data"); // Handle any error during the fetch
+        setLoading(false); // Stop the loading spinner even if there's an error
       }
     };
 
@@ -34,7 +41,7 @@ const Indianfood = () => {
 
   // Render the fetched data
   return (
-    <div className=' lg:container w-full h-full px-2  mx-auto bg-slate-400'>
+    <div className='lg:container w-full h-full px-2 mx-auto'>
       <h1 className="lg:text-3xl text-xs font-bold text-center mb-6 text-indigo-600 underline">INDIAN FOOD</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -54,7 +61,7 @@ const Indianfood = () => {
                 to={`/meals/${meal.idMeal}`} // Use the idMeal for dynamic routing
                 className="mt-2 text-indigo-200 hover:text-white flex"
               >
-               <FiLink className=' animate-bounce'/> View Recipe
+               <FiLink className='animate-bounce'/> View Recipe
               </Link>
             </div>
           </div>

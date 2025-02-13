@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { IoMdSearch } from "react-icons/io";
 import { Link } from "react-router-dom"; // Import Link for navigation
 import Indianfood from "./Indianfood";
@@ -6,9 +6,9 @@ import { IoFastFoodOutline } from "react-icons/io5";
 import { MdFoodBank } from "react-icons/md";
 import Footer from "./Footer";
 
-const Hero = () => {
+const Hero: React.FC = () => {
   // Array of images
-  const images = [
+  const images: string[] = [
     "https://plus.unsplash.com/premium_photo-1683892034683-b6896f6245f9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "https://images.unsplash.com/photo-1661081090290-9b66fd49d882?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "https://images.unsplash.com/photo-1581597096506-acefe678d02b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -17,8 +17,8 @@ const Hero = () => {
   ];
 
   // State to keep track of the current image index
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [data, setData] = useState(""); // State to hold search input
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const [data, setData] = useState<string>(""); // State to hold search input
 
   // Use useEffect to switch images every 3 seconds (3000ms)
   useEffect(() => {
@@ -55,7 +55,7 @@ const Hero = () => {
           <input
             type="text"
             value={data} // Bind input value to state
-            onChange={(e) => setData(e.target.value)} // Update state with input value
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setData(e.target.value)} // Update state with input value
             className="py-2 px-4 rounded-l-md border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 w-full"
             placeholder="Search..."
           />
@@ -71,8 +71,8 @@ const Hero = () => {
       <div className="w-full bg-slate-400 ">
         <Indianfood />
       </div>
-      <div className=" w-full">
-        <Footer/>
+      <div className="w-full">
+        <Footer />
       </div>
     </div>
   );

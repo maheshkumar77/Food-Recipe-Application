@@ -3,11 +3,17 @@ import { useParams } from 'react-router-dom';
 import { LuLoader } from "react-icons/lu";
 import { Link } from "react-router-dom"; 
 
-const ChickenMeals = () => {
-  const { ingredient } = useParams(); // Get the ingredient from the URL params
-  const [meals, setMeals] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+interface Meal {
+  idMeal: string;
+  strMeal: string;
+  strMealThumb: string;
+}
+
+const ChickenMeals: React.FC = () => {
+  const { ingredient } = useParams<{ ingredient: string }>(); // Type for ingredient from URL params
+  const [meals, setMeals] = useState<Meal[]>([]); // Type meals state
+  const [loading, setLoading] = useState<boolean>(true); // Type loading state
+  const [error, setError] = useState<string | null>(null); // Type error state
 
   // Fetch data from the API
   useEffect(() => {
@@ -32,17 +38,23 @@ const ChickenMeals = () => {
       }
     };
 
-    fetchMeals();
+    if (ingredient) {
+      fetchMeals();
+    }
   }, [ingredient]); // Run the effect whenever the `ingredient` changes
 
   // Render loading state
   if (loading) {
-    return <div className="text-center text-8xl w-full flex justify-center items-center"><LuLoader className=' animate-spin' /></div>;
+    return (
+      <div className="text-center text-8xl w-full flex justify-center items-center">
+        <LuLoader className="animate-spin" />
+      </div>
+    );
   }
 
   // Render error state
   if (error) {
-    return <h1 className="text-center text-2xl text-red-600">nonono</h1>;
+    return <h1 className="text-center text-2xl text-red-600">{error}</h1>;
   }
 
   // Render the list of meals if available
@@ -52,32 +64,29 @@ const ChickenMeals = () => {
         Meals with {ingredient}
       </h1>
 
-      
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {meals.map((meal) => (
-             <div
-             key={meal.idMeal}
-             className="bg-indigo-600 text-white rounded-lg shadow-lg hover:shadow-xl transition duration-300"
-           >
-             <img
-               src={meal.strMealThumb}
-               alt={meal.strMeal}
-               className="w-full h-48 object-cover rounded-t-lg"
-             />
-             <div className="p-4">
-               <h2 className="text-xl font-semibold">{meal.strMeal}</h2>
-               <Link
-                  to={`/meals/${meal.idMeal}`}// Use the idMeal for dynamic routing
-                 className="mt-2 text-indigo-200 hover:text-white"
-               >
-                 View Recipe
-               </Link>
-             </div>
-           </div>
-         
-          ))}
-        </div>
-   
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        {meals.map((meal) => (
+          <div
+            key={meal.idMeal}
+            className="bg-indigo-600 text-white rounded-lg shadow-lg hover:shadow-xl transition duration-300"
+          >
+            <img
+              src={meal.strMealThumb}
+              alt={meal.strMeal}
+              className="w-full h-48 object-cover rounded-t-lg"
+            />
+            <div className="p-4">
+              <h2 className="text-xl font-semibold">{meal.strMeal}</h2>
+              <Link
+                to={`/meals/${meal.idMeal}`} // Use the idMeal for dynamic routing
+                className="mt-2 text-indigo-200 hover:text-white"
+              >
+                View Recipe
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
